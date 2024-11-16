@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "process_command.h": "c",
+        "stdint.h": "c",
+        "stdlib.h": "c",
+        "stddef.h": "c",
+        "stdio.h": "c"
+    },
+    "files.autoSave": "onFocusChange",
+    "window.zoomLevel": 1,
+    "C_Cpp.formatting": "default",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/linux/projects/ctest2/bin",
+            "binaryPath": "/home/linux/projects/ctest2/bin/main",
+            "binaryArgs": []
+        }
+    ]
+}
