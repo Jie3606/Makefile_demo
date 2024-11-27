@@ -58,12 +58,12 @@ uint8_t test_cases_normal[] = {
     0xFA, 0xFA, 0x02, 0x07, 0x00  // 正确的读取电源输出状态为关闭
 };
 
-void print_command(uint8_t *commant)
+void print_command(uint8_t *command)
 {
-    printf("Commmant: ");
+    printf("Command: ");
     for (int i = 0; i < 5; i++)
     {
-        printf("%02X ", commant[i]);
+        printf("%02X ", command[i]);
     }
     printf("\n");
 }

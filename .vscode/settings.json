@@ -14,6 +14,14 @@
             "cwd": "/home/linux/projects/ctest2/bin",
             "binaryPath": "/home/linux/projects/ctest2/bin/main",
             "binaryArgs": []
+        },
+        {
+            "cwd": "/home/linux/share/Makefile_demo/bin",
+            "binaryPath": "/home/linux/share/Makefile_demo/bin/main",
+            "binaryArgs": []
         }
+    ],
+    "cSpell.words": [
+        "jieliu"
     ]
 }

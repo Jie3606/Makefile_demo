@@ -16,23 +16,14 @@
 #include <stdint.h>
 #include <string.h>
 
-uint8_t registers[8] = {
-    0x01, // 0x00: 设备 ID
-    0x00, // 0x01: 保留位
-    0x32, // 0x02: 温度
-    0x50, // 0x03: 最高温度
-    0x03, // 0x04: 电池电量高位
-    0xA5, // 0x05: 电池电量低位
-    0x01, // 0x06: 电源输出 Enable (此缓存器设定会影响到 0x07 缓存器)
-    0x01  // 0x07: 电源输出状态 (此缓存器会受到 0x06 影响)
-};
+
 
 void process_command_error(uint8_t errno, uint8_t *response)
 {
-    response[0] = 0xFA;
-    response[1] = 0xFA;
-    response[2] = 0x13;
-    response[3] = 0x00;
+    response[0] = START_BYTE1;
+    response[1] = START_BYTE2;
+    response[2] = ERROR_RESPONSE;
+    response[3] = DATE_RETURN_FLAG;
     response[4] = errno;
     send_response(response);
 }
@@ -46,13 +37,13 @@ void process_command_read(uint8_t register_addr, uint8_t data, uint8_t *response
         return;
     }
     // 检查数据字段是否为 0x00
-    if (data != 0x00)
+    if (data != DATE_RETURN_FLAG)
     {
         process_command_error(ERROR_INVALID_DATA_FIELD, response);
         return;
     }
-    response[0] = 0xFA;
-    response[1] = 0xFA;
+    response[0] = START_BYTE1;
+    response[1] = START_BYTE2;
     response[2] = 0x12;
     response[3] = register_addr;
     response[4] = registers[register_addr];
@@ -64,9 +55,9 @@ void process_command_write(uint8_t register_addr, uint8_t data, uint8_t *respons
     // 检查是否为只读寄存器
     switch (register_addr)
     {
-    case 0x00: // 设备 ID
-    case 0x02: // 温度
-    case 0x04: // 电池电量高位
+    case DEVICE_ID: // 设备 ID
+    case TEMPERATURE_DATA: // 温度
+    case TEMPERATURE_DATA: // 电池电量高位
     case 0x05: // 电池电量低位
     case 0x07: // 电源状态
         process_command_error(ERROR_WRITE_TO_READ_ONLY, response);
@@ -78,8 +69,8 @@ void process_command_write(uint8_t register_addr, uint8_t data, uint8_t *respons
         {
             registers[0x07] = data;
         }
-        response[0] = 0xFA;
-        response[1] = 0xFA;
+        response[0] = START_BYTE1;
+        response[1] = START_BYTE2;
         response[2] = 0x11;
         response[3] = register_addr;
         response[4] = data;
@@ -89,7 +80,7 @@ void process_command_write(uint8_t register_addr, uint8_t data, uint8_t *respons
 }
 void process_command(uint8_t *command, uint8_t *response)
 {
-    if (command[0] != 0xFA || command[1] != 0xFA)
+    if (command[0] != START_BYTE1 || command[1] != START_BYTE2)
     {
         process_command_error(ERROR_INVALID_OPERATION, response);
         return;
